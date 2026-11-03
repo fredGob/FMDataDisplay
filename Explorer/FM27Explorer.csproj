@@ -1,0 +1,61 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <AssemblyName>FM27Explorer</AssemblyName>
+    <RootNamespace>FM27Explorer</RootNamespace>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+    <!-- Chemin d'installation de FM27 (surcharge possible : dotnet build -p:GameDir=...) -->
+    <GameDir Condition="'$(GameDir)' == ''">$(HOME)/.local/share/Steam/steamapps/common/Football Manager 27</GameDir>
+    <BepInExDir>$(GameDir)/BepInEx</BepInExDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- BepInEx core -->
+    <Reference Include="$(BepInExDir)/core/BepInEx.Core.dll" Private="false" />
+    <Reference Include="$(BepInExDir)/core/BepInEx.Unity.IL2CPP.dll" Private="false" />
+    <Reference Include="$(BepInExDir)/core/Il2CppInterop.Runtime.dll" Private="false" />
+    <Reference Include="$(BepInExDir)/core/Il2CppInterop.Common.dll" Private="false" />
+    <Reference Include="$(BepInExDir)/core/0Harmony.dll" Private="false" />
+
+    <!-- Interop générés à partir de FM27 -->
+    <Reference Include="$(BepInExDir)/interop/Il2Cppmscorlib.dll" Private="false" />
+    <Reference Include="$(BepInExDir)/interop/UnityEngine.dll" Private="false" />
+    <Reference Include="$(BepInExDir)/interop/UnityEngine.CoreModule.dll" Private="false" />
+    <Reference Include="$(BepInExDir)/interop/UnityEngine.InputLegacyModule.dll" Private="false" />
+    <Reference Include="$(BepInExDir)/interop/Unity.InputSystem.dll" Private="false" />
+    <Reference Include="$(BepInExDir)/interop/SI.Bindable.Reference.Core.dll" Private="false" />
+    <Reference Include="$(BepInExDir)/interop/SI.Bindable.dll" Private="false" />
+    <Reference Include="$(BepInExDir)/interop/SI.Interop.dll" Private="false" />
+    <Reference Include="$(BepInExDir)/interop/SI.Core.dll" Private="false" />
+    <Reference Include="$(BepInExDir)/interop/SI.Marshalling.dll" Private="false" />
+    <Reference Include="$(BepInExDir)/interop/FM.GamePlugin.dll" Private="false" />
+    <Reference Include="$(BepInExDir)/interop/FM.UI.dll" Private="false" />
+    <Reference Include="$(BepInExDir)/interop/UnityEngine.UIElementsModule.dll" Private="false" />
+    <Reference Include="$(BepInExDir)/interop/Unity.Addressables.dll" Private="false" />
+    <Reference Include="$(BepInExDir)/interop/Unity.ResourceManager.dll" Private="false" />
+    <Reference Include="$(BepInExDir)/interop/SI.UI.dll" Private="false" />
+    <Reference Include="$(BepInExDir)/interop/SI.Addressables.dll" Private="false" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Moteur de note partagé avec l'outil hors jeu (Note/Outil) -->
+    <Compile Include="../Note/NoteEngine.cs" />
+    <Compile Include="../Note/CaEquivalent.cs" />
+    <Compile Include="../Note/NoteData.cs" />
+    <Compile Include="../Note/StaffEngine.cs" />
+  </ItemGroup>
+
+  <!-- Copie automatique dans BepInEx/plugins après compilation -->
+  <Target Name="CopyToPlugins" AfterTargets="Build">
+    <!-- Suppression puis copie (nouveau fichier) : si le jeu tourne, il garde son ancienne copie intacte -->
+    <Delete Files="$(BepInExDir)/plugins/$(TargetFileName)" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(BepInExDir)/plugins" />
+    <Message Importance="high" Text="FM27Explorer.dll copié dans $(BepInExDir)/plugins" />
+  </Target>
+
+</Project>

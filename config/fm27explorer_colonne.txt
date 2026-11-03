@@ -1,0 +1,39 @@
+# Colonnes de notes ajoutées aux tableaux du jeu (plugin FM27 Explorer).
+# Fichier relu au lancement du jeu. Avec touches_dev=1 (fm27explorer_notes.txt) : F10 = relire ce fichier et les notes ;
+# F11 = ajouter toutes les colonnes au tableau affiché ; Maj+F11 / Ctrl+F11 = seuil du filtre +5 / -5.
+actif=1
+# proprietes=1 (depuis 0.12.0) : chaque colonne a sa propre propriété (fm27note, fm27notegk…) ; la colonne modèle
+# ne sert qu'à copier l'apparence (cellule, largeur) et la vraie colonne du jeu garde ses vraies valeurs.
+# proprietes=0 : ancien mode (les valeurs de la colonne modèle sont remplacées partout, fiches comprises).
+proprietes=1
+# Catégorie du menu « insérer une colonne »
+categorie=Notes FM27
+# colonne=identifiant|titre|champ du fichier fm27_notes.tsv|colonne modèle du jeu|infobulle
+# Le modèle est une colonne du jeu de type nombre entier, triée par l'interface. L'identifiant ne doit pas changer :
+# il est enregistré dans les vues du jeu (« Notes FM27 », « CalculAuto »).
+colonne=fm27-note|Note|note|international-youth-goals|Note FM27 : meilleure note parmi les profils du joueur (0-100)
+colonne=fm27-note-gk|Note GB|GK|international-youth-caps|Note FM27 au profil gardien de but (0-100)
+colonne=fm27-note-cb|Note DC|CB|loan-goals|Note FM27 au profil défenseur central (0-100)
+colonne=fm27-note-fb|Note LAT|FB|loan-assists|Note FM27 au profil latéral (0-100)
+colonne=fm27-note-dm|Note MDC|DM|loan-apps|Note FM27 au profil milieu défensif (0-100)
+colonne=fm27-note-cm|Note MC|CM|international-goals-season|Note FM27 au profil milieu central (0-100)
+colonne=fm27-note-am|Note MOC|AM|international-caps-season|Note FM27 au profil milieu offensif (0-100)
+colonne=fm27-note-wg|Note AIL|WG|stats-career-league-goals|Note FM27 au profil ailier (0-100)
+colonne=fm27-note-st|Note BT|ST|stats-career-league-appearances|Note FM27 au profil buteur (0-100)
+# Préparateurs (tableaux de staff) : étoiles d'entraînement × 10, tronquées (29 = 2,9 étoiles, le jeu affiche 2,5 ; 30 et plus = 3 étoiles ; 50 et plus = 5).
+# Calculées pour un préparateur affecté à un seul domaine (fichier fm27_staff.tsv, écrit après chaque extraction F9).
+colonne=fm27-entr|Entr.|entr|international-games-played|Étoiles d'entraînement × 10, meilleur domaine (30 = 3 étoiles, 50 = 5 étoiles)
+colonne=fm27-entr-gb|Ent. GB|entr_gb|international-games-won|Étoiles d'entraînement × 10 : gardiens
+colonne=fm27-entr-dtac|DéfTac|entr_dtac|international-games-drawn|Étoiles d'entraînement × 10 : défense tactique
+colonne=fm27-entr-dtec|DéfTec|entr_dtec|international-games-lost|Étoiles d'entraînement × 10 : défense technique
+colonne=fm27-entr-ptac|PosTac|entr_ptac|international-goals-for|Étoiles d'entraînement × 10 : possession tactique
+colonne=fm27-entr-ptec|PosTec|entr_ptec|international-goals-against|Étoiles d'entraînement × 10 : possession technique
+colonne=fm27-entr-atac|AttTac|entr_atac|number-of-national-manager-jobs|Étoiles d'entraînement × 10 : attaque tactique
+colonne=fm27-entr-atec|AttTec|entr_atec|number-of-awards-won|Étoiles d'entraînement × 10 : attaque technique
+colonne=fm27-entr-phy|Ent. Phy|entr_phy|league-relegations|Étoiles d'entraînement × 10 : physique
+colonne=fm27-entr-cpa|Ent. CPA|entr_cpa|league-promotions|Étoiles d'entraînement × 10 : coups de pied arrêtés
+# filtre : dans les listes de plus de filtre_lignes_min lignes (base de données, pas l'effectif),
+# retire les joueurs dont la note (champ filtre_champ) est inférieure à filtre_min (0 = pas de filtre)
+filtre_champ=note
+filtre_min=40
+filtre_lignes_min=300

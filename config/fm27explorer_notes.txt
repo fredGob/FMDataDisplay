@@ -1,0 +1,16 @@
+# Calcul automatique des notes (plugin FM27 Explorer)
+# auto=1 : chaque semaine de jeu, le jour choisi, quand la partie est arrêtée depuis quelques secondes, le plugin
+#          relit tous les joueurs (≈ 3 min, sans rien bloquer) puis recalcule les notes et recharge les colonnes.
+# auto=0 : seulement quand on appuie sur F9.
+auto=1
+# jour de la semaine (date du jeu) : lundi, mardi, mercredi, jeudi, vendredi, samedi, dimanche
+jour=lundi
+# secondes sans changement de date avant de lancer (le temps que le jeu finisse de jouer les journées)
+attente=15
+# nombre d'extractions gardées dans Documents/Sports Interactive/Football Manager 27/exports (0 = toutes)
+garder=12
+# preparateurs=1 : lit aussi le staff (≈ 30 s de plus) et calcule les étoiles d'entraînement des préparateurs
+preparateurs=1
+# touches_dev=1 : réactive les touches de développement (F2–F8, F10, F11). Par défaut seule F9 est utilisée,
+#                 pour ne pas gêner les raccourcis du jeu. Pris en compte au lancement du jeu.
+touches_dev=0

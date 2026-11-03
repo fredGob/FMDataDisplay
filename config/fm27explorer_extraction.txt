@@ -1,0 +1,56 @@
+# Propriétés lues par F9 en plus des propriétés de base (une par ligne). Modifiable sans recompiler.
+# Niveau actuel : historique (le 1er élément / 220 semble être le CA actuel)
+AbilityProgressHistory
+PerceivedPotentialAbility
+# Attributs (écrits "valeur;min;max")
+AttributeCorners
+AttributeCrossing
+AttributeDribbling
+AttributeFinishing
+AttributeFirstTouch
+AttributeFreeKicks
+AttributeHeading
+AttributeLongShots
+AttributeLongThrows
+AttributeMarking
+AttributePassing
+AttributePenaltyTaking
+AttributeTackling
+AttributeTechnique
+AttributeAggression
+AttributeAnticipation
+AttributeBravery
+AttributeComposure
+AttributeConcentration
+AttributeDecisions
+AttributeDetermination
+AttributeFlair
+AttributeLeadership
+AttributeMovement
+AttributePositioning
+AttributeTeamwork
+AttributeVision
+AttributeWorkRate
+AttributeAcceleration
+AttributeAgility
+AttributeBalance
+AttributeJumpingReach
+AttributeNaturalFitness
+AttributePace
+AttributeStamina
+AttributeStrength
+AttributeAerialReach
+AttributeCommandOfArea
+AttributeCommunication
+AttributeEccentricity
+AttributeHandling
+AttributeKicking
+AttributeOneOnOnes
+AttributeTendencyToPunch
+AttributeReflexes
+AttributeRushingOut
+AttributeThrowing
+# Recrutement (0.12.0) : sexe (football masculin et féminin notés à part), salaire (PropertyValue = £ par semaine), valeur de transfert
+IsPersonFemale
+ContextContractWeeklyWage
+TransferValueRange

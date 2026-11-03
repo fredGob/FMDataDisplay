@@ -1,0 +1,14 @@
+bin/
+obj/
+# Résultats générés à partir des parties (gros fichiers)
+Note/Resultats/*.tsv
+*.log
+.vscode/
+.idea/
+
+# Fichiers de travail gardés en local, pas publiés
+AVANCEMENT.md
+ASSISTANT_RECRUTEMENT.md
+docs/
+Note/Outil/
+Note/Resultats/
