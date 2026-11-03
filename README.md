@@ -7,6 +7,16 @@ colonnes du jeu** (effectif, recherche de joueurs), triables comme les autres.
 *English: a BepInEx plugin for FM27 that reads every player's stats from the game engine, computes a 0-100
 performance rating per position profile, and shows it in sortable in-game columns. Documentation is in French.*
 
+<p align="center">
+  <img src="images/players.png" alt="Recherche de joueurs avec les colonnes de notes" width="900"/>
+  <br/><em>Recherche de joueurs, vue « Notes FM27 » : la note globale et une note par poste, triées comme une colonne du jeu.</em>
+</p>
+
+<p align="center">
+  <img src="images/staff.png" alt="Recherche de staff avec les étoiles d'entraînement" width="750"/>
+  <br/><em>Recherche de staff, vue « CalculAuto » : étoiles d'entraînement par domaine (× 10 : 40 = 4 étoiles).</em>
+</p>
+
 ## Quickstart
 
 1. **BepInEx** : télécharger [BepInEx 6 IL2CPP win-x64 (build 791)](https://builds.bepinex.dev/projects/bepinex_be)
