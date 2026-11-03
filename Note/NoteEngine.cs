@@ -146,6 +146,7 @@ public sealed class ProfileScore
     public double Raw;                                          // 0–100, avant facteur championnat
     public double Final;                                        // après facteur championnat
     public Dictionary<string, double> Components = new();       // stat -> 0–100
+    public Dictionary<string, double> Info = new();             // stats « pour info » (InfoStats) -> 0–100, hors note
 }
 
 public sealed class PoolInfo
@@ -720,7 +721,9 @@ public static class NoteEngine
         foreach (var prof in ProfileOrder)
         {
             var weights = Weights(prof, style);
-            var ctx = Prepare(prof, players, weights.Select(w => w.stat), s, cal);
+            var info = InfoFor(prof, weights);
+            // Chaque stat est mise à l'échelle séparément : les stats « pour info » ne changent pas la note
+            var ctx = Prepare(prof, players, weights.Select(w => w.stat).Concat(info), s, cal);
             if (ctx == null) continue;
             pools.Add(ctx.Info);
             ctxs.Add(ctx);
@@ -737,6 +740,7 @@ public static class NoteEngine
                     total += sc * w;
                 }
                 ps.Raw = total / wsum;
+                foreach (var stat in info) ps.Info[stat] = ctx.Components[stat][p];
                 p.Scores[prof] = ps;
             }
         }
@@ -789,6 +793,17 @@ public static class NoteEngine
                 if (p.Minutes < s.NoteMinMinutes) { p.Scores[ctx.Profile].Final = 0; p.BestScore = 0; }
         return pools;
     }
+
+    // Stats « pour info » : notées sur 0–100 comme les autres (même pool, même échelle) mais sans poids, pour la fiche
+    // joueur du mode Moneyball. Gardien : choix de Fred (3 nov. 2026) de garder les poids C (Note FM, buts encaissés,
+    // possessions gagnées, clean sheets) tout en montrant ce que le gardien fait lui-même (xG évités, arrêts).
+    public static readonly Dictionary<string, string[]> InfoStats = new()
+    {
+        ["GK"] = new[] { XGP, SAVEP, SAVES },
+    };
+
+    public static string[] InfoFor(string profile, (string stat, double w)[] weights) =>
+        InfoStats.TryGetValue(profile, out var l) ? l.Where(x => weights.All(w => w.stat != x)).ToArray() : Array.Empty<string>();
 
     public static (string stat, double w)[] Weights(string profile, string style) =>
         Profiles[profile].TryGetValue(style, out var w) ? w : Profiles[profile]["Complet"];

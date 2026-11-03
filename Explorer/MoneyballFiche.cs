@@ -4,7 +4,7 @@
 // le tableau des attributs (modèle UXML « AttributesTableTemplate », variante gardien comprise) suivi de sa légende
 // (« AttributesKey »), puis le bloc « Infos ». On cache le tableau et sa légende, et on met à leur place un bloc à nous :
 // note Moneyball, puis une colonne par profil du joueur avec la note sur 100 de chaque stat (la plus importante
-// du profil en premier).
+// du profil en premier), puis les stats « pour info », hors note (NoteEngine.InfoStats : gardien).
 //
 // Joueur affiché : lu dans le système de liaison de l'interface (BindingSubsystem) : nœud de l'écran (Panel.Key),
 // puis ses enfants jusqu'à trouver une référence « person » (dref).
@@ -40,7 +40,7 @@ internal static partial class Moneyball
 
     // ── Détail des notes (fm27_notes_detail.tsv) ──
     private sealed class StatLine { public string Stat; public double Score, Value = double.NaN; }
-    private sealed class ProfLine { public string Profile; public double Raw, Final; public List<StatLine> Stats = new(); }
+    private sealed class ProfLine { public string Profile; public double Raw, Final; public List<StatLine> Stats = new(), Info = new(); }
     private sealed class Detail { public double Minutes, Factor; public List<ProfLine> Profiles = new(); }
 
     private static Dictionary<int, Detail> _details;            // dref -> détail
@@ -133,17 +133,23 @@ internal static partial class Moneyball
                 var parts = c[i].Split('|');
                 if (parts.Length < 4) continue;
                 var pl = new ProfLine { Profile = parts[0], Raw = Num(parts[1]), Final = Num(parts[2]) };
-                foreach (var st in parts[3].Split(';', StringSplitOptions.RemoveEmptyEntries))
-                {
-                    var f = st.Split(':');
-                    if (f.Length < 2) continue;
-                    pl.Stats.Add(new StatLine { Stat = f[0], Score = Num(f[1]), Value = f.Length > 2 ? Num(f[2]) : double.NaN });
-                }
+                ParseStats(parts[3], pl.Stats);
+                if (parts.Length > 4) ParseStats(parts[4], pl.Info);
                 det.Profiles.Add(pl);
             }
             d[Probe.PersonDrefBase + idx] = det;
         }
         return d;
+    }
+
+    private static void ParseStats(string text, List<StatLine> into)
+    {
+        foreach (var st in text.Split(';', StringSplitOptions.RemoveEmptyEntries))
+        {
+            var f = st.Split(':');
+            if (f.Length < 2) continue;
+            into.Add(new StatLine { Stat = f[0], Score = Num(f[1]), Value = f.Length > 2 ? Num(f[2]) : double.NaN });
+        }
     }
 
     private static double Num(string s) => double.TryParse(s, NumberStyles.Float, Inv, out var v) ? v : double.NaN;
@@ -462,6 +468,14 @@ internal static partial class Moneyball
                 col.Add(StatRow(StatLabel(stat), s, stat));
             }
             if (rest > 0) col.Add(Text($"… et {rest} autre(s) stat(s)", "secondary-text-colour", "body-sm"));
+            if (pl.Info.Count > 0)
+            {
+                var sub = Text("POUR INFO (HORS NOTE)", "secondary-text-colour", "condensed-xs-regular");
+                sub.style.marginTop = new StyleLength(10f);
+                sub.style.marginBottom = new StyleLength(2f);
+                col.Add(sub);
+                foreach (var s in pl.Info) col.Add(StatRow(StatLabel(s.Stat), s, s.Stat));
+            }
         }
     }
 

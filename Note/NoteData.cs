@@ -281,14 +281,14 @@ public static class NoteData
 
     // Détail des notes pour la fiche joueur (mode Moneyball du plugin) : une ligne par joueur noté (≥ NoteMinMinutes).
     // index, minutes, facteur championnat, puis un champ par profil (meilleur d'abord) :
-    // PROFIL|note des stats (avant championnat)|note finale|stat:note 0–100:valeur brute;stat:…
+    // PROFIL|note des stats (avant championnat)|note finale|stat:note 0–100:valeur brute;stat:…|stats « pour info » (même format)
     public static int WriteGameDetails(string path, IEnumerable<PlayerData> players, NoteSettings s)
     {
         int n = 0;
         var tmp = path + ".tmp";
         using (var w = new StreamWriter(tmp, false, new UTF8Encoding(false)))
         {
-            w.WriteLine("index\tminutes\tfacteur\tprofils (PROFIL|note stats|note finale|stat:note 0-100:valeur brute;...)");
+            w.WriteLine("index\tminutes\tfacteur\tprofils (PROFIL|note stats|note finale|stat:note 0-100:valeur brute;...|stats pour info)");
             var sb = new StringBuilder();
             foreach (var p in players.Where(p => !double.IsNaN(p.BestScore) && p.Minutes >= s.NoteMinMinutes))
             {
@@ -299,15 +299,8 @@ public static class NoteData
                 {
                     sb.Append('\t').Append(pr).Append('|').Append(sc.Raw.ToString("F1", Inv)).Append('|')
                       .Append(sc.Final.ToString("F1", Inv)).Append('|');
-                    bool first = true;
-                    foreach (var (stat, score) in sc.Components)
-                    {
-                        if (double.IsNaN(score)) continue;
-                        if (!first) sb.Append(';');
-                        first = false;
-                        sb.Append(stat).Append(':').Append(score.ToString("F0", Inv)).Append(':');
-                        if (p.Stats.TryGetValue(stat, out var v) && !double.IsNaN(v)) sb.Append(v.ToString("0.###", Inv));
-                    }
+                    AppendStats(sb, p, sc.Components);
+                    if (sc.Info.Count > 0) { sb.Append('|'); AppendStats(sb, p, sc.Info); }
                 }
                 w.WriteLine(sb.ToString());
                 n++;
@@ -316,6 +309,19 @@ public static class NoteData
         File.Copy(tmp, path, true);   // remplacement d'un coup : le jeu ne lit jamais un fichier à moitié écrit
         File.Delete(tmp);
         return n;
+    }
+
+    private static void AppendStats(StringBuilder sb, PlayerData p, Dictionary<string, double> scores)
+    {
+        bool first = true;
+        foreach (var (stat, score) in scores)
+        {
+            if (double.IsNaN(score)) continue;
+            if (!first) sb.Append(';');
+            first = false;
+            sb.Append(stat).Append(':').Append(score.ToString("F0", Inv)).Append(':');
+            if (p.Stats.TryGetValue(stat, out var v) && !double.IsNaN(v)) sb.Append(v.ToString("0.###", Inv));
+        }
     }
 
     // ── Préparateurs (staff) ──────────────────────────────────────────────
