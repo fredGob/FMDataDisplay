@@ -36,6 +36,7 @@
     <Reference Include="$(BepInExDir)/interop/FM.GamePlugin.dll" Private="false" />
     <Reference Include="$(BepInExDir)/interop/FM.UI.dll" Private="false" />
     <Reference Include="$(BepInExDir)/interop/UnityEngine.UIElementsModule.dll" Private="false" />
+    <Reference Include="$(BepInExDir)/interop/UnityEngine.TextRenderingModule.dll" Private="false" />
     <Reference Include="$(BepInExDir)/interop/Unity.Addressables.dll" Private="false" />
     <Reference Include="$(BepInExDir)/interop/Unity.ResourceManager.dll" Private="false" />
     <Reference Include="$(BepInExDir)/interop/SI.UI.dll" Private="false" />

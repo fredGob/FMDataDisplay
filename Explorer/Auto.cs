@@ -428,6 +428,7 @@ touches_dev=0
         var dir = Plugin.ExportDir;
         var notesPath = NotesPath;
         var staffNotesPath = StaffNotesPath;
+        var detailPath = Moneyball.DetailPath;
         int keep = _keep;
         string gameDate = (Extract.StartGameDate ?? GameDate.Date) is DateTime gd ? gd.ToString("yyyy-MM-dd") : "";
         _computeStart = DateTime.Now;
@@ -438,8 +439,12 @@ touches_dev=0
             var warnings = new List<string>();
             var data = NoteData.Load(dir, stamp, warnings.Add);
             if (data.Players.Count == 0) throw new InvalidOperationException("aucun joueur lu dans l'extraction " + stamp);
-            NoteEngine.ComputeAll(data.Players, new NoteSettings());
+            var settings = new NoteSettings();
+            NoteEngine.ComputeAll(data.Players, settings);
             int n = NoteData.WriteGameNotes(notesPath, data.Players);
+            // Détail stat par stat pour la fiche joueur (mode Moneyball)
+            try { NoteData.WriteGameDetails(detailPath, data.Players, settings); }
+            catch (Exception e) { warnings.Add("détail des notes : " + e.Message); }
             // Fichier lisible pour l'assistant de recrutement (exports/FM27_Recrutement.tsv, nom fixe)
             try { NoteData.WriteRecruitment(dir, data, gameDate); }
             catch (Exception e) { warnings.Add("fichier de recrutement : " + e.Message); }
@@ -480,6 +485,7 @@ touches_dev=0
         }
         Plugin.L.LogMessage("Notes : " + t.Result + ". Colonnes rechargées." + next);
         Colonne.Reload();
+        Moneyball.OnNotesReloaded();
     }
 
     // Garde les « keep » dernières extractions (fichiers FM27_Joueurs/Staff/Clubs/Competitions_<date>.tsv)

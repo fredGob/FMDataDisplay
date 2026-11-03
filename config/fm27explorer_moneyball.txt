@@ -1,0 +1,12 @@
+# Mode Moneyball (FM27 Explorer, en développement)
+# moneyball=1 : sur la fiche joueur, le tableau des attributs est remplacé par nos notes (note sur 100 de chaque stat).
+#               Pris en compte au lancement du jeu.
+moneyball=0
+# exploration=1 : à chaque écran ouvert (fiche joueur…), sa structure est écrite dans
+#                 Documents/Sports Interactive/Football Manager 27/exports/ecrans/ (rien n'est modifié à l'écran).
+#                 Pris en compte au lancement du jeu. 0 = désactivé.
+exploration=0
+# nombre d'enregistrements par écran et par lancement du jeu
+par_ecran=3
+# secondes d'attente après l'ouverture d'un écran (le temps que les valeurs s'affichent)
+attente=3

@@ -32,7 +32,7 @@ public class Plugin : BasePlugin
 {
     public const string Guid = "fr.visiondujeu.fm27explorer";
     public const string Name = "FM27 Explorer";
-    public const string Version = "0.12.0";
+    public const string Version = "0.13.0";
 
     internal static ManualLogSource L;
 
@@ -51,6 +51,11 @@ public class Plugin : BasePlugin
         if (Colonne.OwnMode)
         {
             PatchEach(new Harmony(Guid + ".proprietes"), typeof(ProprietePatches), "propriétés à nous");
+        }
+        // Mode Moneyball : fiche joueur (moneyball=1) et structure des écrans (exploration=1), réglages dans fm27explorer_moneyball.txt
+        if (Moneyball.Exploring || Moneyball.Enabled)
+        {
+            PatchEach(new Harmony(Guid + ".moneyball"), typeof(MoneyballPatches), "Moneyball (écrans)");
         }
 
         AddComponent<ExplorerBehaviour>();
@@ -178,6 +183,7 @@ public class ExplorerBehaviour : MonoBehaviour
             if (Keys.Pressed(KeyCode.F9, k => k.f9Key)) Extract.Toggle();
             Extract.Tick();
             NoteAuto.Tick();
+            Moneyball.Tick();
         }
         catch (Exception e)
         {

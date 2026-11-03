@@ -279,6 +279,45 @@ public static class NoteData
         return n;
     }
 
+    // Détail des notes pour la fiche joueur (mode Moneyball du plugin) : une ligne par joueur noté (≥ NoteMinMinutes).
+    // index, minutes, facteur championnat, puis un champ par profil (meilleur d'abord) :
+    // PROFIL|note des stats (avant championnat)|note finale|stat:note 0–100:valeur brute;stat:…
+    public static int WriteGameDetails(string path, IEnumerable<PlayerData> players, NoteSettings s)
+    {
+        int n = 0;
+        var tmp = path + ".tmp";
+        using (var w = new StreamWriter(tmp, false, new UTF8Encoding(false)))
+        {
+            w.WriteLine("index\tminutes\tfacteur\tprofils (PROFIL|note stats|note finale|stat:note 0-100:valeur brute;...)");
+            var sb = new StringBuilder();
+            foreach (var p in players.Where(p => !double.IsNaN(p.BestScore) && p.Minutes >= s.NoteMinMinutes))
+            {
+                sb.Clear();
+                sb.Append(p.Index).Append('\t').Append(p.Minutes.ToString("F0", Inv)).Append('\t')
+                  .Append(NoteEngine.LeagueFactor(p, NoteEngine.TopLevel, s).ToString("F2", Inv));
+                foreach (var (pr, sc) in p.Scores.OrderByDescending(kv => kv.Value.Final))
+                {
+                    sb.Append('\t').Append(pr).Append('|').Append(sc.Raw.ToString("F1", Inv)).Append('|')
+                      .Append(sc.Final.ToString("F1", Inv)).Append('|');
+                    bool first = true;
+                    foreach (var (stat, score) in sc.Components)
+                    {
+                        if (double.IsNaN(score)) continue;
+                        if (!first) sb.Append(';');
+                        first = false;
+                        sb.Append(stat).Append(':').Append(score.ToString("F0", Inv)).Append(':');
+                        if (p.Stats.TryGetValue(stat, out var v) && !double.IsNaN(v)) sb.Append(v.ToString("0.###", Inv));
+                    }
+                }
+                w.WriteLine(sb.ToString());
+                n++;
+            }
+        }
+        File.Copy(tmp, path, true);   // remplacement d'un coup : le jeu ne lit jamais un fichier à moitié écrit
+        File.Delete(tmp);
+        return n;
+    }
+
     // ── Préparateurs (staff) ──────────────────────────────────────────────
 
     public static string StaffPath(string dir, string stamp) => Path.Combine(dir, $"FM27_Staff_{stamp}.tsv");
