@@ -60,6 +60,7 @@ Le code du calcul est dans [`Note/NoteEngine.cs`](Note/NoteEngine.cs).
 ## Prérequis
 
 - **Football Manager 27** (Steam, Windows ou Linux avec Proton).
+- **macOS : non pris en charge.** Le plugin n'a jamais été testé sur Mac, et BepInEx n'y existe qu'en version Intel (x64).
 - **BepInEx 6** version IL2CPP (testé avec **6.0.0-be.791**).
 
 ## Installation
